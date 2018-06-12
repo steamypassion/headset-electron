@@ -16,7 +16,7 @@
     "pack": "NODE_ENV=production ./bin/build_package.sh",
     "dist": "NODE_ENV=production ./bin/build_installers.sh",
     "build": "npm run pack && npm run dist",
-    "postinstall": "electron-rebuild",
+    "postinstall": "electron-rebuild && cp -r ../locales .",
     "repo": "NEW_VERSION=$npm_package_version ./bin/linux_repo.sh"
   },
   "dependencies": {

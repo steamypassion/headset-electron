@@ -15,6 +15,7 @@
     "choco": "@powershell ./bin/build_choco.ps1 -version %npm_package_version%",
     "pack": "electron-packager . --executable-name headset --overwrite --platform=win32 --arch=ia32 --asar --prune --ignore=\"(^Procfile$|^/sig$|^/bin$)\" --out=build --icon=icons/Headset.ico --version-string.ProductName=\"Headset\"",
     "dist": "node bin/winstaller.js",
+    "postinstall": "cpy --parents ../locales locales",
     "build": "npm run pack && npm run dist"
   },
   "dependencies": {
@@ -25,6 +26,7 @@
     "headset-autoupdater": "0.0.1"
   },
   "devDependencies": {
+    "cpy-cli": "^2.0.0",
     "electron": "^2.0.2",
     "electron-installer-windows": "^1.1.0",
     "electron-packager": "^12.1.0",

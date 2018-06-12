@@ -11,3 +11,6 @@ config.js
 */gh-pages/debian/pool
 */gh-pages/redhat/repodata
 */gh-pages/redhat/*.rpm
+darwin/locales
+linux/locales
+windows/locales

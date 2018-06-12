@@ -15,6 +15,7 @@
     "production-like": "NODE_ENV=production electron .",
     "pack": "NODE_ENV=production NEW_VERSION=$npm_package_version ./bin/build_pack.sh",
     "dist": "NODE_ENV=production NEW_VERSION=$npm_package_version ./bin/build_dist.sh",
+    "postinstall": "cp -r ../locales .",
     "build": "npm run pack && npm run dist"
   },
   "dependencies": {
