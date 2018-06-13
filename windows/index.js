@@ -1,13 +1,14 @@
+const debug = require('debug');
 const electron = require('electron');
 const Positioner = require('electron-positioner');
-const { exec } = require('child_process');
-const windowStateKeeper = require('electron-window-state');
 const squirrel = require('electron-squirrel-startup');
-const debug = require('debug');
+const windowStateKeeper = require('electron-window-state');
 const AutoUpdater = require('headset-autoupdater');
 const path = require('path');
-const { version } = require('./package');
+const { exec } = require('child_process');
+
 const headsetTray = require('./lib/headsetTray');
+const { version } = require('./package');
 
 const logger = debug('headset');
 const logPlayer2Win = debug('headset:player2Win');
@@ -26,7 +27,6 @@ let player;
 let tray;
 
 const isDev = (process.env.NODE_ENV === 'development');
-
 logger('Running as developer: %o', isDev);
 
 const shouldQuit = app.makeSingleInstance(() => {
@@ -65,43 +65,29 @@ const start = () => {
     win.loadURL('https://danielravina.github.io/headset/app/');
   }
 
+  player = new BrowserWindow({
+    width: 427,
+    height: 300,
+    minWidth: 430,
+    minHeight: 310,
+    title: 'Headset - Player',
+    icon: path.join(__dirname, 'icons', 'Headset.ico'),
+  });
+  new Positioner(player).move('bottomCenter');
+
   new AutoUpdater();
+
+  tray = new Tray(path.join(__dirname, 'icons', 'Headset.ico'));
+  headsetTray(tray, win, player);
 
   win.webContents.on('did-finish-load', () => {
     logger('Main window finished loading');
-    if (player) return;
-
-    player = new BrowserWindow({
-      width: 427,
-      height: 300,
-      minWidth: 430,
-      minHeight: 310,
-      title: 'Headset - Player',
-      icon: path.join(__dirname, 'icons', 'Headset.ico'),
-    });
-
-    new Positioner(player).move('bottomCenter');
 
     if (isDev) {
       player.loadURL('http://127.0.0.1:3001');
     } else {
       player.loadURL('http://danielravina.github.io/headset/player-v2');
     }
-
-    player.webContents.on('did-finish-load', () => {
-      logger('Player window finished loading');
-      win.focus();
-    });
-
-    player.on('close', (e) => {
-      if (win) {
-        logger('Attempted to close Player window while Headset running');
-        e.preventDefault();
-      } else {
-        logger('Closing Player window and killing Headset');
-        exec('taskkill /F /IM Headset.exe');
-      }
-    });
 
     win.webContents.executeJavaScript(`
       window.electronVersion = "v${version}"
@@ -132,18 +118,30 @@ const start = () => {
       `);
     });
 
-    tray = new Tray(path.join(__dirname, 'icons', 'Headset.ico'));
-    headsetTray(tray, win, player);
-
     if (isDev) {
       win.webContents.openDevTools();
     }
-  }); // end did-finish-load
+  }); // end win did-finish-load
+
+  player.webContents.on('did-finish-load', () => {
+    logger('Player window finished loading');
+    win.focus();
+  });
+
+  player.on('close', (e) => {
+    if (win) {
+      logger('Attempted to close Player window while Headset running');
+      e.preventDefault();
+    } else {
+      logger('Closing Player window and killing Headset');
+      exec('taskkill /F /IM Headset.exe');
+    }
+  });
 
   win.on('close', () => {
     logger('Closing Headset');
     win = null;
-    // after app closes in Win, the global shourtcuts are still up, disabling it here.
+    // after app closes in Win, the global shortcuts are still up, disabling it here.
     globalShortcut.unregisterAll();
     if (player === undefined) return;
     player.close();
@@ -163,8 +161,7 @@ app.on('browser-window-created', (e, window) => {
 });
 /*
  * This is the proxy between the 2 windows.
- * it receives messages from a renderrer
- * and send them to the other renderrer
+ * It receives messages from a renderer and send them to the other renderer
 */
 ipcMain.on('win2Player', (e, args) => {
   logWin2Player('%O', args);

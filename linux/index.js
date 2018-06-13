@@ -1,11 +1,12 @@
 const { exec } = require('child_process');
 const debug = require('debug');
 const electron = require('electron');
+const Positioner = require('electron-positioner');
 const windowStateKeeper = require('electron-window-state');
+
 const mprisService = require('./lib/mprisService.js');
 const registerMediaKeys = require('./lib/registerMediaKeys.js');
 const { version } = require('./package');
-const Positioner = require('electron-positioner');
 
 const logger = debug('headset');
 const logPlayer2Win = debug('headset:player2Win');
@@ -21,7 +22,6 @@ let win;
 let player;
 
 const isDev = (process.env.NODE_ENV === 'development');
-
 logger('Running as developer: %o', isDev);
 
 const shouldQuit = app.makeSingleInstance(() => {
@@ -53,47 +53,31 @@ const start = () => {
   });
 
   mainWindowState.manage(win);
+
   if (isDev) {
     win.loadURL('http://127.0.0.1:3000');
   } else {
     win.loadURL('https://danielravina.github.io/headset/app/');
   }
 
+  player = new BrowserWindow({
+    width: 427,
+    height: 300,
+    minWidth: 427,
+    minHeight: 300,
+    title: 'Headset - Player',
+  });
+
+  new Positioner(player).move('bottomCenter');
+
   win.webContents.on('did-finish-load', () => {
     logger('Main window finished loading');
-    if (player) return;
-
-    player = new BrowserWindow({
-      width: 427,
-      height: 300,
-      minWidth: 427,
-      minHeight: 300,
-      title: 'Headset - Player',
-    });
-
-    new Positioner(player).move('bottomCenter');
 
     if (isDev) {
       player.loadURL('http://127.0.0.1:3001');
     } else {
       player.loadURL('http://danielravina.github.io/headset/player-v2');
     }
-
-    player.webContents.on('did-finish-load', () => {
-      logger('Player window finished loading');
-      win.focus();
-    });
-
-    player.on('close', (e) => {
-      if (win) {
-        logger('Attempted to close Player window while Headset running');
-        e.preventDefault();
-      } else {
-        logger('Closing Player window and killing Headset');
-        player = null;
-        exec('kill -9 $(pgrep headset) &> /dev/null');
-      }
-    });
 
     try {
       logger('Initializing MPRIS and registering MediaKeys');
@@ -110,7 +94,23 @@ const start = () => {
     if (isDev) {
       win.webContents.openDevTools();
     }
-  }); // end did-finish-load
+  }); // end win did-finish-load
+
+  player.webContents.on('did-finish-load', () => {
+    logger('Player window finished loading');
+    win.focus();
+  });
+
+  player.on('close', (e) => {
+    if (win) {
+      logger('Attempted to close Player window while Headset running');
+      e.preventDefault();
+    } else {
+      logger('Closing Player window and killing Headset');
+      player = null;
+      exec('kill -9 $(pgrep headset) &> /dev/null');
+    }
+  });
 
   win.on('close', () => {
     logger('Closing Headset');
@@ -133,8 +133,7 @@ app.on('browser-window-created', (e, window) => {
 
 /*
  * This is the proxy between the 2 windows.
- * it receives messages from a renderrer
- * and send them to the other renderrer
+ * It receives messages from a renderer and send them to the other renderer
 */
 ipcMain.on('win2Player', (e, args) => {
   logWin2Player('%O', args);
