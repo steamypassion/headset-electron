@@ -7,6 +7,7 @@ const AutoUpdater = require('headset-autoupdater');
 const path = require('path');
 
 const headsetTray = require('./lib/headsetTray');
+const i18next = require('./lib/i18nextConfig');
 const { version } = require('./package');
 
 const logger = debug('headset');
@@ -67,16 +68,25 @@ const start = () => {
 
   new Positioner(player).move('bottomCenter');
 
+  new AutoUpdater({
+    // allows the updater to close the app properly
+    onBeforeQuit: () => {
+      willQuitApp = true;
+    },
+  });
+
+  i18next.on('initialized', (options) => {
+    logger(`i18next has been initialized with ${JSON.stringify(options, null, 2)}`);
+  });
+
   tray = new Tray(path.join(__dirname, 'icons', 'Headset.png'));
-  headsetTray(tray, win, player);
+  i18next.on('loaded', () => {
+    logger('i18next resources loaded');
+    headsetTray(tray, win, player, i18next);
+  });
 
   const menu = defaultMenu(app, shell);
   Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
-
-  new AutoUpdater({
-    // allows the updater to close the app properly
-    onBeforeQuit: () => { willQuitApp = true; },
-  });
 
   win.webContents.on('did-finish-load', () => {
     logger('Main window finished loading');
@@ -172,4 +182,11 @@ ipcMain.on('player2Win', (e, args) => {
   try {
     win.webContents.send('player2Win', args);
   } catch (err) { /* window already closed */ }
+});
+
+ipcMain.on('change-locale', (e, lng) => {
+  logger(`Changing locale to: ${lng}`);
+
+  i18next.changeLanguage(lng);
+  headsetTray(tray, win, player, i18next);
 });
