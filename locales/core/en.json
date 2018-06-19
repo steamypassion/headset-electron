@@ -72,9 +72,13 @@
   "followInstructions": "We just sent you an email. Follow the instructions in the email to continue.",
   "following": "Following",
   "forgotPassword": "Forgot Password?",
-  "gdprConsent": "We use cookies to securely identify your account and keep you signed in.<br /><br />We use Google analytics to improve the product and troubleshoot customer issues. <br /><br />A customer may withdraw their consent and delete their data at any time by deleting their account via the account settings menu.",
+  "gdprConsent": {
+    "p1": "We use cookies to securely identify your account and keep you signed in.",
+    "p2": "We use Google analytics to improve the product and troubleshoot customer issues.",
+    "p3": "A customer may withdraw their consent and delete their data at any time by deleting their account via the account settings menu."
+  },
   "getProAccess": "Upgrade now to access this feature.",
-  "getUnlimitedSkips": "Get unlimited skips with <span class=\"pro-badge\">Pro</span>!",
+  "getUnlimitedSkips": "Get unlimited skips with <1>Pro</1>!",
   "gotIt": "Got it",
   "helpLights": "Help us keep the lights on",
   "holder": {
@@ -111,9 +115,9 @@
   "noType": {
     "channels": "No saved Channels, yet.",
     "collections": "No collections, yet.",
-    "explainChannels": "A channel on YouTube is the home page for an account. You can follow as many as you want. Look for the <span class=\"channel-tag\">Channel</span> tag in the search results!",
+    "explainChannels": "A channel on YouTube is the home page for an account. You can follow as many as you want. Look for the <1>Channel</1> tag in the search results!",
     "explainCollections": "Collections are user created playlists that are populated by individual tracks. Build a collection of your favorites, so they’re always close at hand",
-    "explainPlaylists": "A Playlist is a group of videos on users' YouTube channels, listed in a particular way so you can quickly find content that interests you. Look for the <span class=\"playlist-tag\">Playlist</span> tag in the search results!",
+    "explainPlaylists": "A Playlist is a group of videos on users' YouTube channels, listed in a particular way so you can quickly find content that interests you. Look for the <1>Playlist</1> tag in the search results!",
     "playlists": "No saved playlists, yet."
   },
   "notification": {
@@ -151,7 +155,7 @@
   "saveTunes": "Save some tunes!",
   "saved": "SAVED",
   "search": "Search",
-  "searchCheckout": "<a href=\"#/\">Search</a> for new songs or check out a <a href=\"#/radio\">Radio</a> station",
+  "searchCheckout": "<0>Search</0> for new songs or check out a <2>Radio</2> station",
   "selectColor": "Select color scheme",
   "shuffle": "Shuffle",
   "signOut": "Sign Out",
@@ -185,11 +189,11 @@
     "withCount_plural": "{{count}} Tracks"
   },
   "tryFilter": "Maybe try a different filter?",
-  "tryPro": "try <span class=\"pro-badge\">Pro</span> free for 30 days",
+  "tryPro": "try <1>Pro</1> free for 30 days",
   "unlike": "Unlike",
   "updatePassword": "Update Password",
   "upgrade": "Upgrade",
-  "upgradeFor": "Upgrade to <span class=\"pro-badge\">Pro</span> for $1.99/month and keep Headset alive! You will enjoy premium features and a warm fuzzy feeling!",
+  "upgradeFor": "Upgrade to <1>Pro</1> for $1.99/month and keep Headset alive! You will enjoy premium features and a warm fuzzy feeling!",
   "validate": "Validate",
   "version": "Version",
   "wantMoreSkips": "Want more skips?",
