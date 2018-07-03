@@ -1,4 +1,5 @@
 {
+  "account": "Cuenta",
   "agreeToTermsLabel": "Estoy de acuerdo con los Términos y Condiciones",
   "album": "Álbum",
   "allTime": "De todos los tiempos",
@@ -141,6 +142,7 @@
   "playlistDelete": "Eliminar de tus listas de reproducción",
   "playlistDeleteCreator": "La lista de reproducción ha sido eliminada por el creador, lo siento.",
   "playlist_plural": "Listas de reproducción",
+  "preferences": "Preferencias",
   "radio": "Radio",
   "redirecting": "Redirigiendo...",
   "related": "Relacionado",

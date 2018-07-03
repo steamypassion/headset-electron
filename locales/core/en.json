@@ -1,4 +1,5 @@
 {
+  "account": "Account",
   "agreeToTermsLabel": "I Agree to the Terms of Service",
   "album": "Album",
   "allTime": "All Time",
@@ -141,6 +142,7 @@
   "playlistDelete": "Delete from your playlists",
   "playlistDeleteCreator": "Playlist has been deleted by the creator, sorry.",
   "playlist_plural": "Playlists",
+  "preferences": "Preferences",
   "radio": "Radio",
   "redirecting": "Redirecting...",
   "related": "Related",
